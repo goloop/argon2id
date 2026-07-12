@@ -31,8 +31,10 @@ const (
 )
 
 // Default parameters. 64 MiB of memory with a single pass and four lanes is a
-// solid interactive-login cost on modest hardware; raise memory or time for
-// higher-value secrets.
+// solid interactive-login cost on modest hardware - above common
+// memory-cost guidance, which favours raising memory over passes. Measure on
+// your own hardware (see the benchmark) and tune with the options; the cost is
+// recorded in every hash, so old hashes keep verifying after you change it.
 const (
 	defaultMemory  = 64 * 1024 // KiB (64 MiB)
 	defaultTime    = 1
@@ -188,9 +190,9 @@ func (h *Hasher) Verify(encoded string, password []byte) error {
 }
 
 // NeedsRehash reports whether encoded should be replaced: true for a malformed
-// hash, or one whose memory, time, salt or key length is below this hasher's
-// current settings. Call it after a successful Verify to upgrade stored hashes
-// as defaults strengthen over time.
+// hash, or one whose memory, time, parallelism, salt or key length is below this
+// hasher's current settings. Call it after a successful Verify to upgrade stored
+// hashes as defaults strengthen over time.
 func (h *Hasher) NeedsRehash(encoded string) bool {
 	p, err := parse(encoded)
 	if err != nil {
@@ -198,6 +200,7 @@ func (h *Hasher) NeedsRehash(encoded string) bool {
 	}
 	return p.memory < h.memory ||
 		p.time < h.time ||
+		p.threads < h.threads ||
 		len(p.salt) < h.saltLen ||
 		len(p.digest) < h.keyLen
 }
