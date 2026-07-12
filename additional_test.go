@@ -226,3 +226,16 @@ func BenchmarkHash(b *testing.B) {
 		}
 	}
 }
+
+// TestDefaultProfile locks the v1 default cost (m=64MiB, t=2, p=1) so a change
+// to it is a deliberate, visible edit.
+func TestDefaultProfile(t *testing.T) {
+	enc, err := New().Hash([]byte("x"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	const want = "$argon2id$v=19$m=65536,t=2,p=1$"
+	if len(enc) < len(want) || enc[:len(want)] != want {
+		t.Fatalf("default profile = %.32s, want prefix %q", enc, want)
+	}
+}

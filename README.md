@@ -55,7 +55,7 @@ if errors.Is(err, argon2id.ErrMismatch) {
 The encoded value is a PHC string that stands on its own:
 
 ```text
-$argon2id$v=19$m=65536,t=1,p=4$c29tZXNhbHR2YWx1ZQ$aGFzaGRpZ2VzdC4uLg
+$argon2id$v=19$m=65536,t=2,p=1$c29tZXNhbHR2YWx1ZQ$aGFzaGRpZ2VzdC4uLg
 ```
 
 Store it as-is. `Verify` reads the parameters and salt back out of it, so you
@@ -63,7 +63,7 @@ never manage them separately.
 
 ## Tuning the cost
 
-The defaults - 64 MiB of memory, one pass, four lanes - suit an interactive
+The defaults - 64 MiB of memory, two passes, one lane - suit an interactive
 login on modest hardware. Raise them for higher-value secrets or faster
 hardware; the right numbers depend on your latency budget, so measure.
 

@@ -25,7 +25,7 @@
 //	    argon2id.WithThreads(4),       // lanes
 //	)
 //
-// The defaults (64 MiB, one pass, four lanes) suit an interactive login on
+// The defaults (64 MiB, two passes, one lane) suit an interactive login on
 // modest hardware. Every option is bounded, so a hasher can never be configured
 // to mint a hash its own Verify would reject.
 //

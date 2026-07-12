@@ -30,15 +30,15 @@ const (
 	argon2Version   = 0x13 // 19
 )
 
-// Default parameters. 64 MiB of memory with a single pass and four lanes is a
-// solid interactive-login cost on modest hardware - above common
-// memory-cost guidance, which favours raising memory over passes. Measure on
-// your own hardware (see the benchmark) and tune with the options; the cost is
-// recorded in every hash, so old hashes keep verifying after you change it.
+// Default parameters. 64 MiB of memory, two passes and a single lane: the
+// memory cost sits above common minimum guidance, and one lane with two passes
+// matches the usual single-thread server profile. Measure on your own hardware
+// (see the benchmark) and tune with the options; the cost is recorded in every
+// hash, so a hash made under different settings still verifies.
 const (
 	defaultMemory  = 64 * 1024 // KiB (64 MiB)
-	defaultTime    = 1
-	defaultThreads = 4
+	defaultTime    = 2
+	defaultThreads = 1
 	defaultSaltLen = 16
 	defaultKeyLen  = 32
 )

@@ -56,8 +56,8 @@ h := argon2id.New(
 | Option | Default | Meaning |
 |---|---|---|
 | `WithMemory(kib)` | 65536 (64 MiB) | memory cost in KiB |
-| `WithTime(passes)` | 1 | number of passes over memory |
-| `WithThreads(lanes)` | 4 | parallelism (lanes) |
+| `WithTime(passes)` | 2 | number of passes over memory |
+| `WithThreads(lanes)` | 1 | parallelism (lanes) |
 | `WithSaltLength(n)` | 16 | random salt length in bytes |
 | `WithKeyLength(n)` | 32 | derived digest length in bytes |
 
@@ -70,7 +70,7 @@ clamped to a safe range.
 `Hash` returns the standard PHC string:
 
 ```text
-$argon2id$v=19$m=65536,t=1,p=4$<base64-salt>$<base64-digest>
+$argon2id$v=19$m=65536,t=2,p=1$<base64-salt>$<base64-digest>
 ```
 
 Salt and digest are `base64.RawStdEncoding` (no padding). Store the whole string
