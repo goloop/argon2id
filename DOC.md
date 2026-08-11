@@ -12,6 +12,8 @@ English reference; Ukrainian in [DOC.UK.md](DOC.UK.md).
 - [Rehashing](#rehashing)
 - [Bounds and validation](#bounds-and-validation)
 - [Correctness](#correctness)
+- [Command line](#command-line)
+- [Timing and enumeration](#timing-and-enumeration)
 - [Dependencies](#dependencies)
 - [Scope](#scope)
 
@@ -127,6 +129,35 @@ The implementation is pinned to published test vectors, run by `go test`:
 - BLAKE2b - the RFC 7693 vectors, including the empty input.
 
 A passing vector means the construction matches the reference bit for bit.
+
+## Command line
+
+`cmd/argon2id` hashes and verifies from a shell with the library's defaults,
+for the operational moments that have no code around them - seeding a
+database, repairing one account by hand:
+
+```sh
+echo -n 'secret' | argon2id hash
+echo -n 'secret' | argon2id verify '$argon2id$v=19$...'   # exit 0 on match
+argon2id params '$argon2id$v=19$...'                      # cost of a stored hash
+```
+
+The password is read from standard input so it stays out of the process list
+and the shell history; one trailing newline is dropped identically by both
+commands. Exit codes: 0 match, 1 no match, 2 bad usage or a malformed hash -
+a malformed hash is deliberately not reported as a wrong password. Using this
+rather than a throwaway program matters for one reason: a throwaway picks its
+own cost parameters, so the hash it writes is not the one the application
+would write.
+
+## Timing and enumeration
+
+A login that hashes only when the account exists answers "no such account"
+two orders of magnitude faster than "wrong password", and identical error
+messages do not hide it. The fix is to spend the same work on both branches
+by verifying against a decoy hash built once at startup with the same
+settings; `goloop/auth` ships it as `BurnVerify`, and `NeedsRehash` is what
+keeps a long-lived decoy in step with the current parameters.
 
 ## Dependencies
 
