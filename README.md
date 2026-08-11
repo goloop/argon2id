@@ -78,6 +78,13 @@ h := argon2id.New(
 Every option is bounded: values are clamped to a safe range so a hasher can
 never be configured to mint a hash its own `Verify` would later reject.
 
+The cost is paid on every call, and a wrong password costs as much as a right
+one - by design. Bound concurrency at the call site: a login endpoint that
+lets a hundred attempts verify at once has agreed to spend 6.4 GiB at the
+defaults, so put a semaphore (eight concurrent puts the ceiling at 512 MiB)
+and a rate limit in front of it. `NeedsRehash` only parses the string and is
+free.
+
 ## Upgrading old hashes
 
 Call `NeedsRehash` after a successful `Verify` to raise the cost of stored

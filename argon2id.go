@@ -177,6 +177,10 @@ func (h *Hasher) Hash(password []byte) (string, error) {
 // Verify checks password against an encoded Argon2id hash in constant time. A
 // hash whose parameters fall outside the verification bounds is rejected as
 // invalid before any key derivation runs.
+//
+// Each call pays the hash's full memory cost, for a wrong password as much as
+// for a right one. Bound how many verifications run concurrently at the call
+// site; see the package documentation.
 func (h *Hasher) Verify(encoded string, password []byte) error {
 	p, err := parse(encoded)
 	if err != nil {

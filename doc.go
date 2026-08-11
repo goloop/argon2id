@@ -29,6 +29,16 @@
 // modest hardware. Every option is bounded, so a hasher can never be configured
 // to mint a hash its own Verify would reject.
 //
+// The memory cost is paid on every call, and a wrong password costs exactly as
+// much as a right one - that symmetry is the point of a password hash, not an
+// oversight. It also means the caller, not this package, decides how many
+// verifications may run at once: a login endpoint that accepts a hundred
+// concurrent attempts at the default cost has just agreed to spend 6.4 GiB.
+// Bound concurrency at the call site - a semaphore of eight puts the ceiling
+// at half a gigabyte - and rate-limit the endpoint; the hasher itself has no
+// business refusing work. NeedsRehash is the exception: it only parses the
+// encoded string and costs nothing.
+//
 // # Rehashing
 //
 //	if err := h.Verify(stored, pw); err == nil {

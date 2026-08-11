@@ -65,6 +65,15 @@ Higher memory and time make each hash slower and each guess costlier; the right
 numbers depend on your latency budget and hardware, so measure. Every value is
 clamped to a safe range.
 
+The cost is per call, and a wrong password costs exactly as much as a right
+one - that symmetry is what a password hash is for. The consequence lands on
+the caller: an endpoint that verifies a hundred attempts concurrently at the
+defaults spends 6.4 GiB, so bound concurrency at the call site (a semaphore of
+eight caps it at 512 MiB) and rate-limit the endpoint. The hasher does not
+throttle itself: it cannot know your memory budget, and a hasher that silently
+queued would turn a memory ceiling into a latency mystery. `NeedsRehash` is
+the cheap exception - it parses the encoded string and derives nothing.
+
 ## Encoding
 
 `Hash` returns the standard PHC string:
