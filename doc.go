@@ -56,5 +56,29 @@
 // and Rehasher interfaces in goloop/auth, so it can be used through them without
 // either package importing the other.
 //
+// # Not saying who exists
+//
+// A login that hashes only when the account exists answers "no such account"
+// far faster than "wrong password", and identical error messages do not hide
+// it: the difference is two orders of magnitude on a stopwatch, and it turns
+// the endpoint into a list of registered addresses. The fix is to spend the
+// same work on both branches, by verifying against a decoy hash produced once
+// at startup with these same settings. goloop/auth ships that as BurnVerify;
+// the same three lines are easy to write directly. NeedsRehash is what keeps a
+// long-lived decoy in step with the settings around it.
+//
+// # Command line
+//
+// cmd/argon2id hashes and verifies from a shell with these same defaults, for
+// the operational moments that have no code around them - seeding a database,
+// repairing one account by hand:
+//
+//	echo -n 'secret' | argon2id hash
+//	echo -n 'secret' | argon2id verify '$argon2id$v=19$...'
+//
+// Using it rather than a throwaway program matters for one reason: a
+// throwaway picks its own cost parameters, so the hash it writes is not the
+// hash the application would have written.
+//
 // See DOC.md (English) and DOC.UK.md (Ukrainian) for the full reference.
 package argon2id
