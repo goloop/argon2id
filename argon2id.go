@@ -224,6 +224,10 @@ type params struct {
 // decoding so an oversized field cannot force a large allocation.
 func parse(encoded string) (params, error) {
 	var p params
+	const maxEncodedLen = 128 + (maxSaltLen*8+5)/6 + (maxKeyLen*8+5)/6
+	if len(encoded) > maxEncodedLen {
+		return p, ErrInvalidHash
+	}
 	// $argon2id$v=19$m=..,t=..,p=..$salt$digest
 	parts := strings.Split(encoded, "$")
 	if len(parts) != 6 || parts[0] != "" || parts[1] != "argon2id" {

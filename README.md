@@ -1,4 +1,4 @@
-[![deps.dev](https://img.shields.io/badge/deps.dev-insights-4c8dbc)](https://deps.dev/go/github.com%2Fgoloop%2Fargon2id) [![Go Reference](https://pkg.go.dev/badge/github.com/goloop/argon2id.svg)](https://pkg.go.dev/github.com/goloop/argon2id) [![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)](https://github.com/goloop/argon2id/blob/master/LICENSE) [![Stay with Ukraine](https://img.shields.io/static/v1?label=Stay%20with&message=Ukraine%20♥&color=ffD700&labelColor=0057B8&style=flat)](https://u24.gov.ua/)
+[![deps.dev](https://img.shields.io/badge/deps.dev-insights-4c8dbc)](https://deps.dev/go/github.com%2Fgoloop%2Fargon2id) [![Go Reference](https://pkg.go.dev/badge/github.com/goloop/argon2id.svg)](https://pkg.go.dev/github.com/goloop/argon2id) [![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat)](https://github.com/goloop/argon2id/blob/v1/LICENSE) [![Stay with Ukraine](https://img.shields.io/static/v1?label=Stay%20with&message=Ukraine%20♥&color=ffD700&labelColor=0057B8&style=flat)](https://u24.gov.ua/)
 
 # argon2id
 
@@ -126,3 +126,7 @@ with `go test ./...`.
 ## License
 
 MIT - see [LICENSE](LICENSE).
+
+## Release v1.1.2
+
+Reject oversized encoded hashes before allocating parser fields.

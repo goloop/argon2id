@@ -169,3 +169,7 @@ This package hashes and verifies passwords. It does not manage users, sessions
 or tokens; for tokens, refresh rotation and HTTP middleware, use
 [`goloop/auth`](https://github.com/goloop/auth), whose `PasswordHasher`
 interface this package satisfies.
+
+## Release v1.1.2
+
+Reject oversized encoded hashes before allocating parser fields.
